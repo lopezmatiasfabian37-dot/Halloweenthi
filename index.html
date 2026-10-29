@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THITAN HALLOWEEN</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #080510;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+.contenedor {
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
+  padding: 10px;
+}
+h1 {
+  color: #ff9d00;
+  text-shadow: 0 0 15px #ff4d00;
+}
+p { color: #eee; }
+.poster {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+}
+.poster img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.disfraz {
+  position: absolute;
+  width: 30%;
+  height: 20.5%;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  cursor: pointer;
+}
+.disfraz:focus-visible {
+  outline: 3px solid white;
+}
+.disfraz.elegido {
+  border: 4px solid #00ff91;
+  box-shadow: 0 0 25px #00ff91;
+  background: #00ff9120;
+}
+#vampiro { left: 3.5%; top: 38.5%; }
+#bruja { left: 35%; top: 38.5%; }
+#calabaza { left: 66.5%; top: 38.5%; }
+#fantasma { left: 3.5%; top: 60.3%; }
+#robot { left: 35%; top: 60.3%; }
+#alas { left: 66.5%; top: 60.3%; }
+
+#whatsapp {
+  position: absolute;
+  left: 20%;
+  top: 86.5%;
+  width: 60%;
+  height: 7%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50px;
+}
+#mensaje {
+  display: none;
+  padding: 18px;
+  margin: 15px 0;
+  background: #160d25;
+  border: 1px solid #a400ff;
+  border-radius: 12px;
+  line-height: 1.5;
+}
+#mensaje button {
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 30px;
+  background: #00c96b;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+.aviso { font-size: 13px; color: #c9b8dc; }
+</style>
+</head>
+<body>
+<div class="contenedor">
+  <h1>THITAN HALLOWEEN 🎃</h1>
+  <p>Elegí tu disfraz. ¡El premio es una sorpresa!</p>
+
+  <div class="poster" id="poster">
+    <img src="thitan-halloween.png"
+         alt="THITAN HALLOWEEN con seis disfraces realistas">
+
+    <button class="disfraz" id="vampiro"
+      aria-label="Elegir Vampiro" data-nombre="Vampiro"></button>
+    <button class="disfraz" id="bruja"
+      aria-label="Elegir Bruja" data-nombre="Bruja"></button>
+    <button class="disfraz" id="calabaza"
+      aria-label="Elegir Calabaza" data-nombre="Calabaza"></button>
+    <button class="disfraz" id="fantasma"
+      aria-label="Elegir Fantasma" data-nombre="Fantasma"></button>
+    <button class="disfraz" id="robot"
+      aria-label="Elegir Robot" data-nombre="Robot"></button>
+    <button class="disfraz" id="alas"
+      aria-label="Elegir Alas" data-nombre="Alas"></button>
+
+    <button id="whatsapp" aria-label="Reclamar premio por WhatsApp"></button>
+  </div>
+
+  <div id="mensaje">
+    <h2>🎃 ¡Disfraz elegido!</h2>
+    <p id="eleccion"></p>
+    <p>Tu premio es una sorpresa. Escribinos por WhatsApp para consultarlo.</p>
+    <button id="reclamar">RECLAMAR MI PREMIO</button>
+  </div>
+
+  <p class="aviso" id="aviso">
+    Solo podés elegir un disfraz. ¡Pensalo bien!
+  </p>
+</div>
+
+<script>
+const numero = "5491141674565";
+const disfraces = document.querySelectorAll(".disfraz");
+const mensaje = document.getElementById("mensaje");
+const eleccion = document.getElementById("eleccion");
+const reclamar = document.getElementById("reclamar");
+const botonWhatsApp = document.getElementById("whatsapp");
+const clave = "thitan_halloween_eleccion_v2";
+
+function mostrarEleccion(nombre) {
+  localStorage.setItem(clave, nombre);
+  disfraces.forEach(boton => {
+    boton.disabled = true;
+    if (boton.dataset.nombre === nombre) {
+      boton.classList.add("elegido");
+    }
+  });
+  eleccion.textContent = "Elegiste: " + nombre + " 🎭";
+  mensaje.style.display = "block";
+  document.getElementById("aviso").textContent =
+    "¡Elección confirmada! Tu disfraz ya está elegido.";
+}
+
+function abrirWhatsApp() {
+  const nombre = localStorage.getItem(clave);
+  if (!nombre) {
+    alert("Primero elegí un disfraz.");
+    return;
+  }
+  const texto = encodeURIComponent(
+    "Hola, elegí el disfraz de " + nombre +
+    " en THITAN HALLOWEEN. Vengo a consultar por mi premio sorpresa."
+  );
+  window.open("https://wa.me/" + numero + "?text=" + texto, "_blank");
+}
+
+const guardado = localStorage.getItem(clave);
+
+if (guardado) {
+  mostrarEleccion(guardado);
+}
+
+disfraces.forEach(boton => {
+  boton.addEventListener("click", () => {
+    if (!localStorage.getItem(clave)) {
+      mostrarEleccion(boton.dataset.nombre);
+    }
+  });
+});
+
+reclamar.addEventListener("click", abrirWhatsApp);
+botonWhatsApp.addEventListener("click", abrirWhatsApp);
+</script>
+</body>
+</html>
